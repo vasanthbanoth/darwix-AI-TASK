@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Darwix AI — Pitch Visualizer</title>
+  <meta name="description" content="Transform narrative text into cinematic AI storyboards. Powered by Darwix AI × Gemini × Stable Diffusion." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Floating orbs for depth -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="app-container">
+
+    <!-- ── TOP NAV BAR ── -->
+    <nav class="topnav">
+      <div class="topnav-left">
+        <div class="topnav-brand">
+          <div class="logo-circle">
+            <img src="/static/darwix_logo.png" alt="Darwix AI Logo" class="brand-logo" />
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">Darwix<span class="brand-ai"> AI</span></span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="topnav-right">
+        <ul class="nav-menu">
+          <li><a href="#" class="active">Home</a></li>
+          <li class="has-dropdown"><a href="#">Products <span class="chevron">⌄</span></a></li>
+          <li class="has-dropdown"><a href="#">Industries <span class="chevron">⌄</span></a></li>
+          <li><a href="#">Customer Stories</a></li>
+          <li class="has-dropdown"><a href="#">Know Us <span class="chevron">⌄</span></a></li>
+          <li class="has-dropdown"><a href="#">Resources <span class="chevron">⌄</span></a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- ── HERO HEADER ── -->
+    <header class="hero">
+      <div class="hero-label">AI Creative Studio</div>
+      <h1 class="hero-title">
+        Pitch <span class="gradient-word">Visualizer</span>
+      </h1>
+      <p class="hero-subtitle">
+        Type your story. Watch it become a cinematic storyboard — <em>in seconds</em>.
+      </p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-val">6</span><span class="stat-lbl">Art Styles</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-val">AI</span><span class="stat-lbl">Prompt Engine</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-val">∞</span><span class="stat-lbl">Possibilities</span></div>
+      </div>
+    </header>
+
+    <!-- ── INPUT PANEL ── -->
+    <section class="glass-card input-panel">
+      <div class="panel-header">
+        <span class="panel-icon">✍️</span>
+        <div>
+          <h2 class="panel-title">Your Story</h2>
+          <p class="panel-desc">Paste any narrative, pitch, or story below</p>
+        </div>
+      </div>
+
+      <div class="textarea-wrapper">
+        <textarea
+          id="storyInput"
+          placeholder="e.g. 'Sarah walked into the boardroom with quiet confidence. The investors leaned forward as she unveiled the prototype. Numbers flashed on the screen — revenue tripling in six months. A moment of silence, then the lead investor smiled and extended his hand.'"
+          rows="7"
+        ></textarea>
+        <div class="textarea-footer">
+          <span class="char-count"><span id="charCount">0</span> characters</span>
+          <span class="textarea-hint">Tip: Each sentence becomes one storyboard panel</span>
+        </div>
+      </div>
+
+      <!-- Style Selector -->
+      <div class="style-section">
+        <label class="section-label">🎨 Choose Art Style</label>
+        <div class="style-grid" id="stylePills">
+          {% for style in styles %}
+          <button class="style-chip {% if loop.first %}active{% endif %}"
+                  data-style="{{ style }}"
+                  onclick="selectStyle(this)">
+            <span class="chip-dot"></span>
+            {{ style }}
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button id="generateBtn" class="btn-generate" onclick="generate()">
+        <span class="btn-glow"></span>
+        <span id="btnIcon">🎬</span>
+        <span id="btnText">Generate Storyboard</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </section>
+
+    <!-- ── PROGRESS ── -->
+    <div class="progress-panel" id="progressWrap" style="display:none">
+      <div class="progress-info">
+        <div class="progress-pulse"></div>
+        <span id="progressLabel">Generating your storyboard…</span>
+        <span class="progress-frac" id="progressCount">0 / 0</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- ── STORYBOARD OUTPUT ── -->
+    <section class="storyboard-section" id="storyboardSection" style="display:none">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">🎞️ Your Storyboard</h2>
+          <p class="section-sub">AI-generated — hover cards for details</p>
+        </div>
+        <button class="btn-export" onclick="exportHTML()">⬇ Export HTML</button>
+      </div>
+      <div class="storyboard-grid" id="storyboardGrid"></div>
+    </section>
+
+    <!-- ── EXAMPLE NARRATIVES ── -->
+    <section class="examples-section">
+      <div class="examples-header">
+        <span class="examples-label">✦ Try These Narratives</span>
+        <span class="examples-sub">Click any card to load</span>
+      </div>
+      <div class="example-grid" id="exampleCards">
+        <div class="example-card" onclick="fillExample(this)">
+          <div class="ex-head">
+            <span class="ex-icon">🚀</span>
+            <span class="ex-badge">Startup</span>
+          </div>
+          <div class="ex-title">Startup Pitch</div>
+          <div class="ex-preview">Sarah walked into the boardroom with quiet confidence. The investors leaned forward as she unveiled the prototype. Numbers flashed — revenue tripling in six months. The lead investor smiled and extended his hand.</div>
+        </div>
+        <div class="example-card" onclick="fillExample(this)">
+          <div class="ex-head">
+            <span class="ex-icon">🌿</span>
+            <span class="ex-badge">Success</span>
+          </div>
+          <div class="ex-title">Customer Success</div>
+          <div class="ex-preview">Before our platform, Maria spent hours manually tracking inventory. After onboarding, she automated everything in a weekend. Her team's productivity soared by 40%. Today, she runs three warehouses effortlessly from a single dashboard.</div>
+        </div>
+        <div class="example-card" onclick="fillExample(this)">
+          <div class="ex-head">
+            <span class="ex-icon">🏙️</span>
+            <span class="ex-badge">Journey</span>
+          </div>
+          <div class="ex-title">Product Journey</div>
+          <div class="ex-preview">It started in a tiny garage with just two engineers and a whiteboard. They iterated relentlessly through 47 failed prototypes. The breakthrough came at 2am on a Tuesday. Now their technology powers cities across five continents.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer class="footer">
+      <div class="footer-brand">
+        <img src="/static/darwix_logo.png" alt="Darwix" class="footer-logo" />
+        <span>Darwix AI</span>
+      </div>
+      <span class="footer-copy">Pitch Visualizer · Powered by Gemini × Stable Diffusion</span>
+    </footer>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

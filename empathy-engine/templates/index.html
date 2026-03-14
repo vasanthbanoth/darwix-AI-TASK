@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empathy Engine — AI Voice with a Soul</title>
+  <meta name="description" content="Empathy Engine dynamically modulates synthesized speech based on emotional content, giving AI a truly human voice." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <!-- Background canvas for ambient particles -->
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-circle">
+          <div class="logo-icon">🎙️</div>
+        </div>
+        <div>
+          <h1 class="logo-title">Empathy Engine</h1>
+          <p class="logo-sub">AI Voice · Human Soul</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="dot"></span> Live
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Input Panel -->
+      <section class="card input-card">
+        <h2 class="card-title">
+          <span class="icon">✍️</span> Enter Your Text
+        </h2>
+        <div class="textarea-wrapper">
+          <textarea
+            id="inputText"
+            placeholder="Type or paste any text here… e.g. 'I just got promoted! This is the best day of my life!'"
+            rows="5"
+            maxlength="500"
+          ></textarea>
+          <div class="char-counter"><span id="charCount">0</span>/500</div>
+        </div>
+        <div class="btn-row">
+          <button id="analyzeBtn" class="btn btn-secondary" onclick="analyzeOnly()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Detect Emotion
+          </button>
+          <button id="synthesizeBtn" class="btn btn-primary" onclick="synthesize()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 9l-3 3 3 3M12 9V5m0 14v-4"/></svg>
+            Synthesize Voice
+          </button>
+        </div>
+      </section>
+
+      <!-- Emotion Results -->
+      <section class="card emotion-card" id="emotionCard" style="display:none">
+        <h2 class="card-title">
+          <span class="icon">🧠</span> Emotion Analysis
+        </h2>
+        <div class="emotion-main">
+          <div class="emotion-badge" id="emotionBadge">
+            <span class="emotion-emoji" id="emotionEmoji">😐</span>
+            <span class="emotion-label" id="emotionLabel">Neutral</span>
+          </div>
+          <div class="emotion-stats">
+            <div class="stat">
+              <span class="stat-label">Confidence</span>
+              <div class="stat-bar-wrap">
+                <div class="stat-bar" id="confidenceBar"></div>
+              </div>
+              <span class="stat-val" id="confidenceVal">0%</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Intensity</span>
+              <div class="stat-bar-wrap">
+                <div class="stat-bar intensity-bar" id="intensityBar"></div>
+              </div>
+              <span class="stat-val" id="intensityVal">0%</span>
+            </div>
+          </div>
+        </div>
+        <!-- All Scores Chart -->
+        <div class="scores-section" id="scoresSection"></div>
+        <!-- Voice Config -->
+        <div class="voice-config" id="voiceConfig" style="display:none">
+          <h3 class="vc-title">🔊 Voice Parameters</h3>
+          <div class="vc-grid" id="vcGrid"></div>
+        </div>
+      </section>
+
+      <!-- Audio Player -->
+      <section class="card audio-card" id="audioCard" style="display:none">
+        <h2 class="card-title">
+          <span class="icon">🔊</span> Synthesized Audio
+        </h2>
+        <div class="audio-player-wrap">
+          <div class="waveform-viz" id="waveformViz">
+            <div class="wave-bars" id="waveBars"></div>
+          </div>
+          <audio id="audioPlayer" controls></audio>
+          <a id="downloadBtn" class="btn btn-outline" style="display:none">
+            ⬇ Download .wav
+          </a>
+        </div>
+      </section>
+
+      <!-- Loading Overlay -->
+      <div class="loading-overlay" id="loadingOverlay" style="display:none">
+        <div class="spinner">
+          <div class="ring"></div>
+          <span id="loadingText">Processing…</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Example Prompts -->
+    <section class="examples-section">
+      <h3 class="examples-title">Try These Examples</h3>
+      <div class="examples-grid">
+        <button class="example-chip" onclick="fillExample(this)">I just got the job offer! I can\'t believe it — this is amazing! 🎉</button>
+        <button class="example-chip" onclick="fillExample(this)">I lost my phone. Everything was on it. I\'m devastated.</button>
+        <button class="example-chip" onclick="fillExample(this)">Why would you even say that? This is completely unacceptable!</button>
+        <button class="example-chip" onclick="fillExample(this)">Oh wow, I had no idea that was even possible! Incredible!</button>
+        <button class="example-chip" onclick="fillExample(this)">The meeting is scheduled for Tuesday at 3pm in conference room B.</button>
+        <button class="example-chip" onclick="fillExample(this)">I can\'t look at that again. It\'s absolutely revolting.</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
