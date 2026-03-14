@@ -25,10 +25,15 @@ load_dotenv()
 
 app = FastAPI(title="Pitch Visualizer", version="1.0.0")
 
+import tempfile
+
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
-app.mount("/outputs", StaticFiles(directory=str(BASE_DIR / "outputs")), name="outputs")
+
+tmp_outputs = Path(tempfile.gettempdir()) / "outputs"
+tmp_outputs.mkdir(exist_ok=True)
+app.mount("/outputs", StaticFiles(directory=str(tmp_outputs)), name="outputs")
 
 
 class GenerateRequest(BaseModel):

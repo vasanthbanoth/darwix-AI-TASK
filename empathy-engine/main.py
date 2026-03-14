@@ -15,12 +15,17 @@ from emotion_detector import detect_emotion
 from emotion_voice_map import get_voice_config
 from tts_engine import synthesize
 
+import tempfile
+
 app = FastAPI(title="Empathy Engine", version="1.0.0")
 
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
-app.mount("/outputs", StaticFiles(directory=str(BASE_DIR / "outputs")), name="outputs")
+
+tmp_outputs = Path(tempfile.gettempdir()) / "outputs"
+tmp_outputs.mkdir(exist_ok=True)
+app.mount("/outputs", StaticFiles(directory=str(tmp_outputs)), name="outputs")
 
 
 class TextInput(BaseModel):

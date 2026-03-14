@@ -11,8 +11,9 @@ import requests
 from pathlib import Path
 from urllib.parse import quote
 
+import tempfile
 
-OUTPUT_DIR = Path(__file__).parent / "outputs"
+OUTPUT_DIR = Path(tempfile.gettempdir()) / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 HF_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"

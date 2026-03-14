@@ -6,10 +6,11 @@ Text-to-Speech using edge-tts.
 import os
 import uuid
 import asyncio
+import tempfile
 from pathlib import Path
 from emotion_voice_map import VoiceConfig
 
-OUTPUT_DIR = Path(__file__).parent / "outputs"
+OUTPUT_DIR = Path(tempfile.gettempdir()) / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 VOICE = "en-US-AriaNeural"
