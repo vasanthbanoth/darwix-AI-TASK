@@ -17,9 +17,9 @@ from fastapi.responses import StreamingResponse, HTMLResponse
 from fastapi.requests import Request
 from pydantic import BaseModel
 
-from .segmenter import segment_into_scenes
-from .prompt_engineer import enhance_prompt, get_available_styles
-from .image_generator import generate_image
+from segmenter import segment_into_scenes
+from prompt_engineer import enhance_prompt, get_available_styles
+from image_generator import generate_image
 
 load_dotenv()
 
