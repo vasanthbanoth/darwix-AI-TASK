@@ -10,25 +10,45 @@
   <link rel="stylesheet" href="/empathy-engine/static/styles.css">
 </head>
 <body>
+
+  <!-- Floating orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
   <!-- Background canvas for ambient particles -->
   <canvas id="bgCanvas"></canvas>
 
-  <div class="app-container">
-    <!-- Header -->
-    <header class="header">
-      <div class="logo">
+  <!-- ── TOP NAV BAR ── -->
+  <nav class="topnav">
+    <div class="topnav-left">
+      <div class="topnav-brand">
         <div class="logo-circle">
-          <div class="logo-icon">🎙️</div>
+          <img src="/empathy-engine/static/darwix_logo.png" alt="Darwix AI Logo" class="brand-logo" />
         </div>
-        <div>
-          <h1 class="logo-title">Empathy Engine</h1>
-          <p class="logo-sub">AI Voice · Human Soul</p>
+        <div class="brand-text">
+          <span class="brand-name">Darwix<span class="brand-ai"> AI</span></span>
         </div>
       </div>
-      <div class="header-badge">
-        <span class="dot"></span> Live
-      </div>
-    </header>
+    </div>
+    <div class="topnav-right">
+      <ul class="nav-menu">
+        <li><a href="#" class="active">Home</a></li>
+        <li class="has-dropdown"><a href="#">Products <span class="chevron">⌄</span></a></li>
+        <li class="has-dropdown"><a href="#">Industries <span class="chevron">⌄</span></a></li>
+        <li><a href="#">Customer Stories</a></li>
+        <li class="has-dropdown"><a href="#">Know Us <span class="chevron">⌄</span></a></li>
+        <li class="has-dropdown"><a href="#">Resources <span class="chevron">⌄</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="app-container">
+    <!-- Hero Heading -->
+    <div class="hero-heading">
+      <h1>Empathy Engine</h1>
+      <p class="logo-sub">Give AI a truly <span style="color:var(--purple)">human voice</span> — emotion-driven speech synthesis</p>
+    </div>
 
     <!-- Main Content -->
     <main class="main">

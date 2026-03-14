@@ -11,9 +11,9 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.requests import Request
 from pydantic import BaseModel
-from emotion_detector import detect_emotion
-from emotion_voice_map import get_voice_config
-from tts_engine import synthesize
+from .emotion_detector import detect_emotion
+from .emotion_voice_map import get_voice_config
+from .tts_engine import synthesize
 
 import tempfile
 
