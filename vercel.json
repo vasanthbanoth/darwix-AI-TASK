@@ -3,9 +3,7 @@
     {
       "src": "empathy-engine/main.py",
       "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "250mb"
-      }
+      "config": { "maxLambdaSize": "250mb" }
     },
     {
       "src": "pitch-visualizer/main.py",
@@ -13,6 +11,14 @@
     }
   ],
   "routes": [
+    {
+      "src": "/empathy-engine/static/(.*)",
+      "dest": "empathy-engine/static/$1"
+    },
+    {
+      "src": "/pitch-visualizer/static/(.*)",
+      "dest": "pitch-visualizer/static/$1"
+    },
     {
       "src": "/empathy-engine/(.*)",
       "dest": "empathy-engine/main.py"
