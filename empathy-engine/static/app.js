@@ -38,7 +38,7 @@ async function analyzeOnly() {
   document.getElementById('synthesizeBtn').disabled = true;
 
   try {
-    const res = await fetch('/analyze', {
+    const res = await fetch('/empathy-engine/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text })
@@ -65,13 +65,13 @@ async function synthesize() {
   document.getElementById('synthesizeBtn').disabled = true;
 
   try {
-    const res = await fetch('/synthesize', {
+    const synthRes = await fetch('/empathy-engine/synthesize', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || 'Synthesis failed.');
+    const data = await synthRes.json();
+    if (!synthRes.ok) throw new Error(data.detail || 'Synthesis failed.');
 
     // Build analysis-like object for display
     const display = {

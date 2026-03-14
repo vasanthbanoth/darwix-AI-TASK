@@ -29,11 +29,11 @@ import tempfile
 
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+app.mount("/pitch-visualizer/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 tmp_outputs = Path(tempfile.gettempdir()) / "outputs"
 tmp_outputs.mkdir(exist_ok=True)
-app.mount("/outputs", StaticFiles(directory=str(tmp_outputs)), name="outputs")
+app.mount("/pitch-visualizer/outputs", StaticFiles(directory=str(tmp_outputs)), name="outputs")
 
 
 class GenerateRequest(BaseModel):
@@ -42,6 +42,8 @@ class GenerateRequest(BaseModel):
 
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/pitch-visualizer/", response_class=HTMLResponse)
+@app.get("/pitch-visualizer", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {
         "request": request,
@@ -54,8 +56,8 @@ async def list_styles():
     return {"styles": get_available_styles()}
 
 
-@app.post("/generate")
-async def generate(body: GenerateRequest):
+@app.post("/pitch-visualizer/generate")
+async def generate_storyboard(request: Request, body: GenerateRequest):
     """SSE endpoint — streams panels one by one as they complete."""
     if not body.text.strip():
         raise HTTPException(400, "Text cannot be empty.")
@@ -93,7 +95,7 @@ async def generate(body: GenerateRequest):
                     img_path = await loop.run_in_executor(
                         None, generate_image, prompt, idx
                     )
-                    image_url = f"/outputs/{img_path.name}"
+                    image_url = f"/pitch-visualizer/outputs/{img_path.name}"
                     error = None
                 except Exception as e:
                     image_url = None

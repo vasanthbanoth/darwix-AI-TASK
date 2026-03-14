@@ -46,7 +46,7 @@ async function generate() {
 
   try {
     // Make POST request and get SSE readable stream
-    const response = await fetch('/generate', {
+    const response = await fetch('/pitch-visualizer/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text, style: selectedStyle }),

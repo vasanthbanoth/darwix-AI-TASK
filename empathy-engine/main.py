@@ -21,11 +21,11 @@ app = FastAPI(title="Empathy Engine", version="1.0.0")
 
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+app.mount("/empathy-engine/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 tmp_outputs = Path(tempfile.gettempdir()) / "outputs"
 tmp_outputs.mkdir(exist_ok=True)
-app.mount("/outputs", StaticFiles(directory=str(tmp_outputs)), name="outputs")
+app.mount("/empathy-engine/outputs", StaticFiles(directory=str(tmp_outputs)), name="outputs")
 
 
 class TextInput(BaseModel):
@@ -39,11 +39,13 @@ class SynthesizeInput(BaseModel):
 
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/empathy-engine/", response_class=HTMLResponse)
+@app.get("/empathy-engine", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.post("/analyze")
+@app.post("/empathy-engine/analyze")
 async def analyze(body: TextInput):
     """Analyze text and return emotion + voice config."""
     if not body.text.strip():
@@ -69,7 +71,7 @@ async def analyze(body: TextInput):
     }
 
 
-@app.post("/synthesize")
+@app.post("/empathy-engine/synthesize")
 async def synthesize_endpoint(body: SynthesizeInput):
     """Synthesize speech with emotion-driven vocal modulation."""
     if not body.text.strip():
@@ -96,7 +98,7 @@ async def synthesize_endpoint(body: SynthesizeInput):
 
     filename = audio_path.name
     return {
-        "audio_url": f"/outputs/{filename}",
+        "audio_url": f"/empathy-engine/outputs/{filename}",
         "emotion": emotion,
         "intensity": intensity,
         "voice_config": {
