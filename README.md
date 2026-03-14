@@ -1,3 +1,32 @@
+# 🎙️ Darwix AI — Challenge Submissions
+
+> **Two AI-powered challenges, one repo.** Built for the Darwix AI interview, these projects showcase emotion-driven voice synthesis and text-to-storyboard generation with a premium Web3-inspired UI.
+
+---
+
+## 🖼️ Screenshots
+
+### Challenge 1 — The Empathy Engine
+![Empathy Engine UI](docs/empathy_engine_screenshot.png)
+
+> A premium dark-mode FastAPI app with a Darwix AI branded nav, animated ambient orbs, and live emotion-to-voice synthesis.
+
+---
+
+### Challenge 2 — The Pitch Visualizer
+> A cinematic storyboard generator that streams AI-generated panels in real-time using Server-Sent Events.
+
+---
+
+## 📦 Projects
+
+| Challenge | Description | Local URL |
+|-----------|-------------|-----------|
+| 🎙️ Empathy Engine | Detects emotion from text, modulates TTS pitch/rate/volume using `edge-tts` | `localhost:8000/empathy-engine/` |
+| 🎬 Pitch Visualizer | Converts a pitch narrative into a streaming storyboard via Gemini + Stable Diffusion | `localhost:8001/pitch-visualizer/` |
+
+---
+
 # 🎙️ Empathy Engine — AI Voice with a Human Soul
 
 > Give AI a voice that feels. The Empathy Engine detects the emotion in any text and modulates the synthesized speech to match — naturally, expressively, humanly.
@@ -14,6 +43,7 @@
 | `"The meeting is at 3pm in Room B."` | Normal, neutral voice 😐 |
 
 ---
+
 
 ## 🧠 Architecture & Design Choices
 
